@@ -1,0 +1,167 @@
+
+# Expense Project in Flask
+
+import os
+import sqlite3
+from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, g, flash, jsonify, redirect, request, send_from_directory, render_template
+
+# Configure application
+# Configure application
+app = Flask(__name__)
+app.secret_key = 'expense'
+
+def get_db_connection():
+    conn = sqlite3.connect('expense.db')
+    conn.row_factory = sqlite3.Row
+    return conn
+
+# Ensure templates are auto-reloaded
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+
+@app.after_request
+def after_request(response):
+    """Ensure responses aren't cached"""
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
+
+@app.route("/", methods = ["GET", "POST"])
+def login():
+    conn = get_db_connection()
+    name = request.form.get("name")
+    password = request.form.get("password")
+
+    if request.method == "POST":
+        cur = conn.cursor()
+        cur.execute("Select * from users where username = ? and password = ?", (name, password))
+        user = cur.fetchone()
+        cur.close()
+        conn.close()
+
+        if user:
+            flash('Login successful!', 'success')
+            return render_template('index.html')
+        else:
+            flash('Invalid username or password. Please try again.', 'error')
+            return render_template('login.html')
+        
+    return render_template('login.html')
+
+@app.route('/index', methods=["GET", "POST"])
+def index():
+    conn = get_db_connection()
+    expenses = conn.execute('Select * from expenses').fetchall()
+    conn.commit()
+    conn.close()
+
+    return render_template('index.html', expenses = expenses)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
+<!-- HTML Code (Index.HTML) -->
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+        <link href="/static/style.css" rel="stylesheet">
+        <title>Expense Tracker</title>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Expense Tracker</h1>
+        </div>
+        <div class="container">
+            <div class="section">
+
+                <h2>Add Expenses</h2>
+                <br /><br />
+                <!-- TODO: Create a form for users to submit a name, a month, and a day
+                amount, description, date, and category.
+             -->
+                <form action="/" method="post">
+                    <input name="amount" placeholder="Amount" type="text">
+                    <input name="description" placeholder="Description">
+                    <input name="date" placeholder="Date">
+                    <input name="category" placeholder="Category">
+
+                    <input type="submit" value="Add Expense">
+                </form>
+            </div>
+            <br /><br />
+            <div class="section">
+
+                <h2>All Expenses</h2>
+                <br /><br />
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Amount</th>
+                            <th>Description</th>
+                            <th>Date</th>
+                            <th>Category</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for expense in expenses %}
+                        <tr>
+                            <td>{{ expense['Amount'] }}</td>
+                            <td>{{ expense['Description'] }}</td>
+                            <td>{{ expense['Date'] }}</td>
+                            <td>{{ expense['Category'] }}</td>
+                        </tr>
+                        {% endfor %}
+                        <!-- TODO: Loop through the database entries to display them in this table -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>
+
+
+<!-- HTML Code (Login.HTML) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    
+    <link href="/static/style.css" rel="stylesheet">
+
+    <title>Expense Tracker</title>
+</head>
+<body>
+    <div class="header">
+        <h1>Expense Tracker</h1>
+    </div>
+    <centre>
+        <div class="container">
+            <div class="section">
+                <form action="/" method="post">
+                    <label for="name">Username:</label>
+                    <input name="name" placeholder="User Name" type="text"><br>
+                    <label for="password">Password:</label>   
+                    <input name="password" placeholder="Password" type="password"><br><br>
+                    <input type="submit" value="Login">
+                </form>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+    </centre>
+</body>
+</html>

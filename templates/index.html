@@ -1,0 +1,99 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="/static/style.css" rel="stylesheet">
+        <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
+    <title>Expenses</title>
+    </head>
+
+    <body>
+        <!-- Invoking Javascript-->
+        <script src="/static/validation.js"></script>
+        <h2>Expense Report</h2>
+
+        <!-- Add Expenses Start -->
+        <div class="section">
+            <h2>Add Expenses</h2>
+            <form action="/index" method="post" id = "myForm">
+                <label for="amount">Enter Amount:</label>
+                <input autofocus id="amount" name = "amount" placeholder="Amount" type="text"><br />
+                <label for="description">Enter Description:</label>
+                <input id="description" name = "description" placeholder="Description" type="text"><br />
+                <label for="date">Enter Date:</label>
+                <input id="date" name = "date" placeholder="Date" type = "date"><br />
+                <label for="category">Enter Category:</label><br />
+                <select name = "category" id = "category" placeholder="Category">
+                    <option disabled selected value>Select Category</option>
+                    <option value = "Food">Food</option>
+                    <option value = "Official">Official</option>
+                    <option value = "Leisure">Leisure</option>
+                    <option value = "Accomodation">Accomodation</option>
+                    <option value = "Travel">Travel</option>
+                </select>
+                <br />
+
+                <input type="submit" value="Add Expense" onclick="return validateform()"><br />
+                <input type="hidden" id="rowIndex" name="rowIndex">
+                {% if success_message %}
+                <div class="success-message">
+                    {{ success_message }}
+                </div>
+                {% endif %} 
+            </form>
+        </div>
+        <!-- Add Expenses End -->
+
+        <!-- Search Expense Feature Start -->
+        <div class="search">
+            <form action="/search" method = "get" id="search_form">
+                <label>Search Expenses: </label>
+                <input type = "text" class="input" placeholder="Search" id = "query" name = "query">
+                <input type="submit" value="Search Expense" onclick="search()"><br />
+            </form>
+        </div>
+        <!-- Search Expense Feature End -->
+
+        <table id = "myTable">
+            <thead>
+                <tr>
+                    <th>Amount</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Delete</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                <tr>
+                    <td><input type = "text" name="{{ expense.id }}_amount" value = "{{ expense['amount'] }}" disabled></td>
+                    <td><input type = "text" name="{{ expense.id }}_description" value = "{{ expense['description'] }}" disabled></td>
+                    <td><input type = "text" name="{{ expense.id }}_date" value = "{{ expense['date'] }}" disabled></td>
+                    <td><input type = "text" name="{{ expense.id }}_category" value = "{{ expense['category'] }}" disabled></td>
+                    <td>
+                        <form action = "/delexpenses" method = "post" >
+                            <input name="id" type="hidden" value="{{ expense.id }}">
+                            <button type="submit" onclick="del()">Delete</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form id="expenseForm">
+                            <button type="button" id = "editSaveBtn" onclick="toggleEditSave(this)">Edit</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                
+                <tr>
+                    <td colspan="4">Total: {{ total }}</td>
+                </tr>
+            </tbody>
+        </table>
+<a href="/logout">Logout</a>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Table Row</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Editable Table</h2>
+
+<table id="myTable">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>John Doe</td>
+        <td>john@example.com</td>
+        <td><button onclick="editRow(this)">Edit</button></td>
+    </tr>
+    <tr>
+        <td>Jane Smith</td>
+        <td>jane@example.com</td>
+        <td><button onclick="editRow(this)">Edit</button></td>
+    </tr>
+    </tbody>
+</table>
+
+<br>
+
+<h2>Edit Row</h2>
+
+<form id="editForm">
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name"><br>
+    <label for="email">Email:</label><br>
+    <input type="text" id="email" name="email"><br><br>
+    <input type="hidden" id="rowIndex" name="rowIndex">
+    <input type="submit" value="Update">
+</form>
+
+<script>
+    function editRow(button) {
+        var row = button.parentNode.parentNode;
+        var cells = row.cells;
+
+        var name = cells[0].innerText;
+        var email = cells[1].innerText;
+
+        document.getElementById('name').value = name;
+        document.getElementById('email').value = email;
+        document.getElementById('rowIndex').value = row.rowIndex - 1; // Adjust index to start from 0
+    }
+
+    document.getElementById('editForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        var rowIndex = document.getElementById('rowIndex').value;
+        var name = document.getElementById('name').value;
+        var email = document.getElementById('email').value;
+
+        var table = document.getElementById('myTable');
+        var row = table.rows[parseInt(rowIndex) + 1]; // Adjust index to skip header row
+
+        row.cells[0].innerText = name;
+        row.cells[1].innerText = email;
+
+        // Clear form inputs
+        document.getElementById('name').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('rowIndex').value = '';
+
+        alert('Row updated successfully!');
+    });
+</script>
+
+</body>
+</html>

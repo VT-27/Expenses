@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Expenses</title>
+</head>
+<body>
+    <h2>Edit Expenses</h2>
+    <form action="{{ url_for('edit_expenses', id=expense.id) }}" method="post">
+        <label for="amount">Enter Amount:</label>
+        <input type="text" id="amount" name="amount" value="{{ expense.amount }}"><br>
+
+        <label for="description">Enter Description:</label>
+        <input type="text" id="description" name="description" value="{{ expense.description }}"><br>
+
+        <label for="date">Enter Date:</label>
+        <input type="date" id="date" name="date" value="{{ expense.date }}"><br>
+
+        <label for="category">Enter Category:</label><br>
+        <select id="category" name="category">
+            <option value="Food" {% if expense.category == 'Food' %} selected {% endif %}>Food</option>
+            <option value="Official" {% if expense.category == 'Official' %} selected {% endif %}>Official</option>
+            <option value="Leisure" {% if expense.category == 'Leisure' %} selected {% endif %}>Leisure</option>
+            <option value="Accommodation" {% if expense.category == 'Accommodation' %} selected {% endif %}>Accommodation</option>
+            <option value="Travel" {% if expense.category == 'Travel' %} selected {% endif %}>Travel</option>
+        </select><br>
+
+        <input type="submit" value="Update Expenses">
+    </form>
+</body>
+</html>

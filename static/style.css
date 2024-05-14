@@ -1,0 +1,136 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Global styles */
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #f4f4f4;
+  color: #333;
+  margin: 20px;
+}
+h2 {
+  margin-bottom: 20px;
+}
+.success-message {
+  color: green;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+.input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.submit-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Table styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table th, table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+table th {
+  background-color: #f2f2f2;
+  text-align: left;
+}
+table td {
+  text-align: left;
+}
+
+/* Buttons */
+.btn {
+  background-color: #008CBA;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+@media screen and (max-width: 600px) {
+  body {
+      margin: 10px;
+  }
+}
+
+/* Form styles */
+.section {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  max-width: 50%; /* Set maximum width */
+  margin-left: none; /* Center the section horizontally */
+  margin-right: auto; /* Center the section horizontally */
+}
+
+.section h2 {
+  margin-bottom: 10px;
+}
+
+.section form input[type="text"],
+.section form input[type="date"],
+.section form input[type="password"] {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Success message */
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+/* Button styles */
+button,
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Hover effect */
+button:hover,
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+select, select option {
+  width: calc(100% - 22px);
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+}
